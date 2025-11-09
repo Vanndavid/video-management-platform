@@ -6,7 +6,7 @@ services:
     container_name: video_app
     volumes:
       - ./backend:/var/www/html
-      - storage_dev:/var/www/html/storage
+      - ./backend/storage:/var/www/html/storage
     networks: [web]
     depends_on: [redis]
     command: php-fpm
@@ -19,7 +19,7 @@ services:
     container_name: video_worker
     volumes:
       - ./backend:/var/www/html
-      - storage_dev:/var/www/html/storage
+      - ./backend/storage:/var/www/html/storage
     networks: [web]
     depends_on: [redis]
     command: sh -lc "php artisan queue:work --queue=transcode,default --sleep=1 --tries=1"
@@ -68,5 +68,5 @@ networks:
   web:
     external: true
 
-volumes:
-  storage_dev:
+# volumes:
+#   storage_dev:

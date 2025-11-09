@@ -2,24 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Listing;
 
-class DatabaseSeeder extends Seeder
-{
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+class DatabaseSeeder extends Seeder {
+    public function run(): void {
+        Listing::factory()->create(['title'=>'12 Sample St','address'=>'Richmond VIC']);
+        Listing::factory()->create(['title'=>'9 Ocean Ave','address'=>'St Kilda VIC']);
     }
 }
