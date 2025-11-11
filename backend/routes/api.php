@@ -11,6 +11,7 @@ Route::get('/health', [AnalyticsController::class, 'health']);
 Route::post('/videos/upload', [VideoController::class, 'upload']);
 Route::post('/videos', [VideoController::class, 'store']);
 Route::get('/videos/{id}', [VideoController::class, 'show']);
+Route::get('/listings', [VideoController::class, 'index']);
 Route::get('/listings/{id}/videos', [VideoController::class, 'byListing']);
 
 // Optional manual triggers

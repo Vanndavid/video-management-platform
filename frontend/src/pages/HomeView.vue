@@ -6,76 +6,120 @@ const health = ref('Checking...')
 const topVideos = ref([])
 const loading = ref(true)
 
-onMounted(async () => {
+async function fetchData() {
   try {
+    // API health check
     const res = await api.get('/health')
     health.value = res.data.ok ? '✅ API Connected' : '❌ Offline'
 
+    // Get top 5 videos by plays
     const topRes = await api.get('/analytics/top-videos')
-    topVideos.value = topRes.data
+    const rows = topRes.data
+
+    // Fetch detailed info (with listing + assets)
+    const details = []
+    for (const row of rows) {
+      const v = await api.get(`/videos/${row.video_id}`)
+      details.push({
+        ...v.data,
+        plays: row.plays,
+      })
+    }
+    topVideos.value = details
   } catch (e) {
+    console.error('Error fetching data', e)
     health.value = '❌ API Offline'
   } finally {
     loading.value = false
   }
-})
-import { useRouter } from 'vue-router'
-const router = useRouter()
-function openVideo(id) {
-  router.push(`/videos/${id}`)
+}
+
+onMounted(fetchData)
+
+async function logPlay(videoId) {
+  try {
+    await api.post(`/videos/${videoId}/events`, { event_type: 'PLAY' })
+  } catch (e) {
+    console.warn('Failed to log play event', e)
+  }
 }
 </script>
 
 <template>
   <v-container>
-    <!-- System Status -->
-    <v-card class="pa-4 mb-6">
-      <h2 class="text-h6 mb-2">System Status</h2>
-      <p class="text-h5">{{ health }}</p>
-    </v-card>
-
-    <!-- Top Videos Analytics -->
+    <!-- Top Videos -->
     <v-card class="pa-4">
       <h2 class="text-h6 mb-4">Top 5 Videos by Plays</h2>
 
       <v-skeleton-loader v-if="loading" type="list-item@5" />
 
-      <v-list v-else two-line>
-        <v-list-item
+      <v-row v-else>
+        <v-col
           v-for="v in topVideos"
-          :key="v.video_id"
-          class="border-b"
+          :key="v.id"
+          cols="12"
+          md="6"
+          lg="4"
         >
-          <template #prepend>
-            <v-avatar color="deep-purple-accent-4" class="mr-3">
-              <span class="text-white font-bold">
-                {{ v.plays }}
+          <v-card elevation="3" class="rounded-lg overflow-hidden">
+            <v-img
+              v-if="v.thumbnail_url"
+              :src="v.thumbnail_url"
+              height="180"
+              cover
+            ></v-img>
+
+            <v-card-title class="font-bold">
+              {{ v.title }}
+            </v-card-title>
+
+            <!-- Listing info -->
+            <v-card-subtitle class="text-caption">
+              <span v-if="v.listing">
+                🏠 {{ v.listing.title }} — {{ v.listing.address }}
               </span>
-            </v-avatar>
-          </template>
+              <span v-else>
+                (No listing info)
+              </span>
+            </v-card-subtitle>
 
-          <v-list-item-title>Video ID: {{ v.video_id }}</v-list-item-title>
-          <v-list-item-subtitle>Plays: {{ v.plays }}</v-list-item-subtitle>
+            <!-- Play stats -->
+            <v-card-subtitle class="text-caption mb-1">
+              Plays: {{ v.plays }} |
+              Status:
+              <span :class="v.status === 'READY' ? 'text-success' : 'text-warning'">
+                {{ v.status }}
+              </span>
+            </v-card-subtitle>
 
-          <template #append>
-            <v-btn
-              variant="text"
-              color="primary"
-              @click="openVideo(v.video_id)"
-            >
-              View
-            </v-btn>
-          </template>
-        </v-list-item>
+            <v-card-text>
+              <video
+                v-if="v.status === 'READY'"
+                :src="v.source_url"
+                controls
+                width="100%"
+                class="rounded"
+                @play="logPlay(v.id)"
+              />
+              <v-alert
+                v-else
+                type="info"
+                class="mt-2"
+              >
+                Video still processing...
+              </v-alert>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-        <v-alert
-          v-if="!topVideos.length && !loading"
-          type="info"
-          class="mt-4"
-        >
-          No analytics data yet — play some videos!
-        </v-alert>
-      </v-list>
+      <v-alert
+        v-if="!topVideos.length && !loading"
+        type="info"
+        class="mt-4"
+      >
+        No analytics data yet — play some videos to see them here!
+      </v-alert>
     </v-card>
   </v-container>
 </template>

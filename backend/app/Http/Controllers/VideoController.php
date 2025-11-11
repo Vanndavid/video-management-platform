@@ -44,7 +44,7 @@ class VideoController extends Controller
 
     public function show(string $id)
     {
-        return Video::with('assets')->findOrFail($id);
+        return Video::with('assets','listing')->findOrFail($id);
     }
 
     public function byListing(int $listingId)
@@ -52,4 +52,10 @@ class VideoController extends Controller
         $listing = Listing::findOrFail($listingId);
         return $listing->videos()->with('assets')->get();
     }
+
+    public function index()
+    {
+        return Listing::with('videos.assets')->get();
+    }
+
 }

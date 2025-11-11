@@ -1,0 +1,75 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: DockerFile.dev
+    container_name: video_app
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/storage:/var/www/html/storage
+    networks: [web]
+    depends_on: [redis]
+    command: php-fpm
+    expose: ["9000"]
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: DockerFile.dev
+    container_name: video_worker
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/storage:/var/www/html/storage
+    networks: [web]
+    depends_on: [redis]
+    command: sh -lc "php artisan queue:work --queue=transcode,default --sleep=1 --tries=1"
+
+  nginx:
+    image: nginx:alpine
+    container_name: video_nginx
+    volumes:
+      - ./backend:/var/www/html
+      - ./nginx/dev.api.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.videoApi.rule=Host(`api.vms.vanndavidteng.com`)"
+      - "traefik.http.routers.videoApi.entrypoints=web,websecure"
+      - "traefik.http.routers.videoApi.tls=true"
+      - "traefik.http.routers.videoApi.tls.certresolver=letsencrypt"
+      - "traefik.http.services.videoApi.loadbalancer.server.port=80"
+    networks: [web]
+    depends_on: [app]
+    expose: ["80"]
+
+  frontend:
+    image: node:22-alpine
+    container_name: video_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    environment:
+      - VITE_API_BASE=/api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.video.rule=Host(`vms.vanndavidteng.com`)"
+      - "traefik.http.routers.video-frontend.entrypoints=web,websecure"
+      - "traefik.http.routers.video-frontend.tls=true"
+      - "traefik.http.routers.video-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.video-frontend.loadbalancer.server.port=80"
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run build -- --host"
+    networks: [web]
+
+  redis:
+    image: redis:7-alpine
+    container_name: video_redis
+    ports: ["6379:6379"]
+    networks: [web]
+
+networks:
+  web:
+    external: true
+
+# volumes:
+#   storage_dev:
