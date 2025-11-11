@@ -4,13 +4,11 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ListingFactory extends Factory
-{
-    public function definition(): array
-    {
+class ListingFactory extends Factory {
+    public function definition(): array {
         return [
-            'title' => fake()->streetAddress(),
-            'address' => fake()->city(),
+            'title' => $this->faker->streetAddress(),
+            'address' => $this->faker->address(),
         ];
     }
 }
