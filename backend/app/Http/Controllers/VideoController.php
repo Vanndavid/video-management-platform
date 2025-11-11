@@ -37,7 +37,7 @@ class VideoController extends Controller
             'size_bytes' => $req->file('file')->getSize(),
         ]);
         if($video){
-            $video->update(['status' => 'QUEUED']);
+            $video->update(['status' => 'READY']);
             dispatch(new TranscodeVideoJob($video->id));
         }
 
