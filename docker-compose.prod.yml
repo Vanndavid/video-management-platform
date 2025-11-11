@@ -42,13 +42,12 @@ services:
     expose: ["80"]
 
   frontend:
-    image: node:22-alpine
+    build:
+      context: ./frontend
+      dockerfile: DockerFile.prod
     container_name: video_frontend
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    environment:
-      - VITE_API_BASE=/api
+    networks:
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.video.rule=Host(`vms.vanndavidteng.com`)"
@@ -56,15 +55,11 @@ services:
       - "traefik.http.routers.video-frontend.tls=true"
       - "traefik.http.routers.video-frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.video-frontend.loadbalancer.server.port=80"
-    ports:
-      - "5173:5173"
-    command: sh -c "npm install && npm run build -- --host"
     networks: [web]
 
   redis:
     image: redis:7-alpine
     container_name: video_redis
-    ports: ["6379:6379"]
     networks: [web]
 
 networks:
