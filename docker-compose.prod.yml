@@ -17,6 +17,8 @@ services:
       context: ./backend
       dockerfile: DockerFile.dev
     container_name: video_worker
+    labels:
+    - "traefik.enable=false"  
     volumes:
       - ./backend:/var/www/html
       - ./backend/storage:/var/www/html/storage
