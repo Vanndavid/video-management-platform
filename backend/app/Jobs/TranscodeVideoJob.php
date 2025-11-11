@@ -24,7 +24,6 @@ class TranscodeVideoJob implements ShouldQueue
     public function handle(): void
     {
         $video = Video::find($this->videoId);
-        $video->update(['status' => 'DiSPATCHED']);
         if (!$video) return;
 
         $video->update(['status' => 'PROCESSING']);
