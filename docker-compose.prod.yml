@@ -55,7 +55,7 @@ services:
       - "traefik.http.routers.video-frontend.tls=true"
       - "traefik.http.routers.video-frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.video-frontend.loadbalancer.server.port=80"
-    networks: [web]
+
 
   redis:
     image: redis:7-alpine
