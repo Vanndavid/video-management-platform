@@ -51,10 +51,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.video.rule=Host(`vms.vanndavidteng.com`)"
-      - "traefik.http.routers.video-frontend.entrypoints=web,websecure"
-      - "traefik.http.routers.video-frontend.tls=true"
-      - "traefik.http.routers.video-frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.video-frontend.loadbalancer.server.port=80"
+      - "traefik.http.routers.video.entrypoints=web,websecure"
+      - "traefik.http.routers.video.tls=true"
+      - "traefik.http.routers.video.tls.certresolver=letsencrypt"
+      - "traefik.http.services.video.loadbalancer.server.port=80"
 
 
   redis:
