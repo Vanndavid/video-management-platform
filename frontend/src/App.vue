@@ -16,7 +16,7 @@ onMounted(async () => {
 <template>
   <v-app>
     <v-app-bar color="deep-purple accent-4" dark app>
-      <v-app-bar-title>REA Video Console {{ health }}</v-app-bar-title>
+      <v-app-bar-title>Video Management System {{ health }}</v-app-bar-title>
       <v-spacer />
       <v-btn variant="text" to="/" router>Home</v-btn>
       <v-btn variant="text" to="/listings" router>Listings</v-btn>

@@ -1,6 +1,6 @@
 # video-management-platform
-A lightweight Laravel + Vue 3 (Vuetify) Prototype video ingestion and analytics system inspired by REA’s mission
-# REA Video Pipeline Demo
+A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics system inspired
+# Demo
 
 ### Features
 - Upload video → async “transcode” job via Laravel Queue (Redis)
