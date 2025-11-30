@@ -24,7 +24,7 @@ async function upload() {
   form.append("file", file.value)
 
   try {
-    const res = await api.post("/videos/upload", form, {
+    const res = await api.post("/videos", form, {
       headers: { "Content-Type": "multipart/form-data" },
     })
     message.value = `✅ Uploaded: ${res.data.data.title}`

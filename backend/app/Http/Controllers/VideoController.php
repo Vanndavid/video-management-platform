@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
-    public function upload(Request $req)
+    public function store(Request $req)
     {
         $req->validate([
             'listing_id' => 'required',
