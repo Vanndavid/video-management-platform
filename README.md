@@ -1,14 +1,3 @@
-# video-management-platform
-
-# Demo
-
-### Features
-- Upload video → async “transcode” job via Laravel Queue (Redis)
-- Track status transitions (UPLOADED → PROCESSING → READY/FAILED)
-- Serve video assets via Nginx storage alias
-- Record play events and aggregate Top Videos analytics
-- Fully containerized with Docker + Traefik
-- Live Vue dashboard (upload, listing, analytics)
 #  Video Management Platform  
 
 A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics system inspired
@@ -47,15 +36,15 @@ Feature tests verify:
 
 ---
 
-##  Testing
+##  Run Locally
 
-# 1. Copy env file
+1. Copy env file
 cp .env.example .env
 
-# 2. Start containers
+2. Start containers
 docker compose -f docker-compose.dev.yml up -d --build
 
-# 3. Migrate database
+3. Migrate database
 docker compose exec app php artisan migrate --seed
 
 Then open:
