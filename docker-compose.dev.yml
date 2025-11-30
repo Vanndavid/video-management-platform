@@ -11,6 +11,7 @@ services:
     depends_on: [redis]
     command: php-fpm
     expose: ["9000"]
+    user: "${UID:-1000}:1000"
 
   worker:
     build:
@@ -23,6 +24,7 @@ services:
     networks: [web]
     depends_on: [redis]
     command: sh -lc "php artisan queue:work --queue=transcode,default --sleep=1 --tries=1"
+    user: "${UID:-1000}:1000"
 
   nginx:
     image: nginx:alpine

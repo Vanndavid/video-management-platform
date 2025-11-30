@@ -8,7 +8,6 @@ use App\Http\Controllers\AnalyticsController;
 Route::get('/health', [AnalyticsController::class, 'health']);
 
 // Video lifecycle
-Route::post('/videos/upload', [VideoController::class, 'upload']);
 Route::post('/videos', [VideoController::class, 'store']);
 Route::get('/videos/{id}', [VideoController::class, 'show']);
 Route::get('/listings', [VideoController::class, 'index']);
