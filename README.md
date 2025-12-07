@@ -1,6 +1,6 @@
-#  Video Management Platform  
+#  Media Analysis System 
 
-A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics system inspired
+A media engine designed for the Real Estate industry allowing agents to upload large property videos without blocking the UI, processes them in the background, and captures user interaction data to analyse viewing engagement.
 ---
 
 ##  Overview
@@ -8,7 +8,7 @@ A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics
 | Layer | Technology | Purpose |
 |-------|-------------|----------|
 | **Backend API** | Laravel 11 (API-only) | Video upload, queue jobs, analytics |
-| **Frontend** | Vue 3 + Vuetify | Simple dashboard for upload & listing |
+| **Frontend** | Vue 3 + Vuetify | Dashboard for upload & listing |
 | **Queue** | Redis 7 + Laravel Queue | Simulated transcoding jobs |
 | **Database** | SQLite | Store listings, videos, assets, events |
 | **Reverse Proxy** | Traefik v3 | HTTPS routing for frontend + API |
@@ -19,7 +19,7 @@ A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics
 ##  Features
 
 -  **Video Uploads** — Upload MP4/WebM files per listing  
--  **Async Job Flow** — Queues a fake *TranscodeVideoJob* that simulates processing  
+-  **Async Job Flow** — Queues a *TranscodeVideoJob* that simulates processing  
 -  **Status Tracking** — `UPLOADED → PROCESSING → READY / FAILED`  
 -  **Asset Management** — Stores original videos and mock renditions in `/storage/app/public/videos`  
 -  **Playback Analytics** — Tracks play/completion events and returns top-played videos  
@@ -31,7 +31,7 @@ A lightweight Laravel + Vue 3 (Vuetify) Prototype video management and analytics
 ##  Testing
 
 Feature tests verify:
-- `/api/health` endpoint responds with ✅ 200 OK  
+- `/api/health` endpoint responds with 200 OK  
 - `/api/videos` creates a new record and dispatches a queue job  
 
 ---
@@ -46,6 +46,8 @@ docker compose -f docker-compose.dev.yml up -d --build
 
 3. Migrate database
 docker compose exec app php artisan migrate --seed
+
+4. Add video.localhost to you host
 
 Then open:
 Frontend: http://video.localhost
